@@ -1,6 +1,6 @@
 # Job PDF PD/STBY/Split Extractor
 
-Local web app for uploading crew/job description PDFs and extracting:
+Streamlit web app for uploading crew/job description PDFs and extracting:
 
 - Job number
 - Valid days
@@ -11,11 +11,13 @@ Local web app for uploading crew/job description PDFs and extracting:
 - Split start/end/duration
 - CSV export
 
-## Run
+## Run locally
 
 ```bash
 cd /Users/alfred/job-pdf-jobtime-extractor
-python3 -m uvicorn app:app --host 0.0.0.0 --port 8020
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/streamlit run streamlit_app.py --server.port 8020
 ```
 
 Open on this Mac:
@@ -24,13 +26,28 @@ Open on this Mac:
 http://127.0.0.1:8020/
 ```
 
-Open from another device on the same Wi-Fi/LAN, replace the IP if needed:
+## Deploy to Streamlit Community Cloud
+
+Repository:
 
 ```text
-http://10.0.0.167:8020/
+https://github.com/KDSGYT/job-pdf-jobtime-extractor
 ```
 
-## Test with the sample PDF
+Deployment settings:
+
+- Repository: `KDSGYT/job-pdf-jobtime-extractor`
+- Branch: `main`
+- Main file path: `streamlit_app.py`
+- Python dependencies: `requirements.txt`
+
+Prefilled deploy URL:
+
+```text
+https://share.streamlit.io/deploy?repository=KDSGYT%2Fjob-pdf-jobtime-extractor&branch=main&mainModule=streamlit_app.py
+```
+
+## Test parser with the sample PDF
 
 ```bash
 python3 tests/smoke_test.py
