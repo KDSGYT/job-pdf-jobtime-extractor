@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job PDF PD/STBY/Split Extractor</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PDF Job Description Extractor</p>
+        <h1>Extract job numbers, PD time, STBY, and split times</h1>
+        <p class="subtext">Upload a weekday job description PDF. The app reads each job page and pulls only the timing records you asked for.</p>
+      </div>
+      <div class="upload-card">
+        <form id="uploadForm">
+          <label for="pdfFile" class="dropzone">
+            <span class="drop-icon">📄</span>
+            <strong>Choose PDF</strong>
+            <small id="fileName">No file selected</small>
+          </label>
+          <input id="pdfFile" name="pdf" type="file" accept="application/pdf,.pdf" required />
+          <div class="actions">
+            <button type="submit" id="extractBtn">Extract</button>
+            <button type="button" id="downloadBtn" disabled>Download CSV</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="status" id="statusBox">Upload a PDF to begin.</section>
+
+    <section class="summary-grid" id="summaryGrid" hidden>
+      <div><span id="jobsCount">0</span><small>Jobs with records</small></div>
+      <div><span id="recordsCount">0</span><small>Total records</small></div>
+      <div><span id="pdCount">0</span><small>PD time</small></div>
+      <div><span id="stbyCount">0</span><small>STBY</small></div>
+      <div><span id="splitCount">0</span><small>Split</small></div>
+    </section>
+
+    <section class="filters" id="filters" hidden>
+      <input id="searchInput" type="search" placeholder="Search job number, location, type..." />
+      <select id="typeFilter">
+        <option value="">All types</option>
+        <option value="PD time">PD time</option>
+        <option value="STBY">STBY</option>
+        <option value="Split">Split</option>
+      </select>
+    </section>
+
+    <section class="table-wrap" id="tableWrap" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th>Job #</th>
+            <th>Valid days</th>
+            <th>Type</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Duration</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Job start/end</th>
+            <th>Page</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
