@@ -13,6 +13,10 @@ const extractBtn = document.querySelector('#extractBtn');
 
 let currentRows = [];
 let currentFile = null;
+let sortColumn = '';
+let sortDirection = 'asc';
+
+const timeColumns = new Set(['start', 'end', 'duration', 'job_start', 'job_end', 'job_duration']);
 
 fileInput.addEventListener('change', () => {
   currentFile = fileInput.files[0] || null;
@@ -40,15 +44,48 @@ function badgeClass(type) {
 function filteredRows() {
   const query = searchInput.value.trim().toLowerCase();
   const type = typeFilter.value;
+  const words = query.split(/\s+/).filter(Boolean);
   return currentRows.filter(row => {
     if (type && row.record_type !== type) return false;
-    if (!query) return true;
-    return Object.values(row).some(value => String(value ?? '').toLowerCase().includes(query));
+    if (!words.length) return true;
+    const haystack = Object.values(row).map(value => String(value ?? '').toLowerCase()).join(' ');
+    return words.every(word => haystack.includes(word));
+  });
+}
+
+function timeToMinutes(value) {
+  const [hours, minutes] = String(value || '').split(':');
+  if (!/^\d+$/.test(hours || '') || !/^\d+$/.test(minutes || '')) return -1;
+  return Number(hours) * 60 + Number(minutes);
+}
+
+function sortValue(row, column) {
+  if (timeColumns.has(column)) return timeToMinutes(row[column]);
+  if (column === 'page') return Number(row[column] || 0);
+  return String(row[column] ?? '').toLowerCase();
+}
+
+function sortedRows(rows) {
+  if (!sortColumn) return rows;
+  const direction = sortDirection === 'desc' ? -1 : 1;
+  return [...rows].sort((a, b) => {
+    const av = sortValue(a, sortColumn);
+    const bv = sortValue(b, sortColumn);
+    if (av < bv) return -1 * direction;
+    if (av > bv) return 1 * direction;
+    return 0;
+  });
+}
+
+function renderSortHeaders() {
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.remove('sorted-asc', 'sorted-desc');
+    if (th.dataset.sort === sortColumn) th.classList.add(`sorted-${sortDirection}`);
   });
 }
 
 function renderRows() {
-  const rows = filteredRows();
+  const rows = sortedRows(filteredRows());
   resultsBody.innerHTML = rows.map(row => `
     <tr>
       <td><strong>${escapeHtml(row.job_number)}</strong></td>
@@ -60,9 +97,11 @@ function renderRows() {
       <td>${escapeHtml(row.from_location)}</td>
       <td>${escapeHtml(row.to_location)}</td>
       <td>${escapeHtml(row.job_start)} → ${escapeHtml(row.job_end)}</td>
+      <td>${escapeHtml(row.on_duty_location)}</td>
       <td>${escapeHtml(row.page)}</td>
     </tr>
   `).join('');
+  renderSortHeaders();
   setStatus(`Showing ${rows.length} of ${currentRows.length} extracted records.`);
 }
 
@@ -130,3 +169,11 @@ async function downloadCsv() {
 downloadBtn.addEventListener('click', downloadCsv);
 searchInput.addEventListener('input', renderRows);
 typeFilter.addEventListener('change', renderRows);
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const nextColumn = th.dataset.sort;
+    sortDirection = sortColumn === nextColumn && sortDirection === 'asc' ? 'desc' : 'asc';
+    sortColumn = nextColumn;
+    renderRows();
+  });
+});

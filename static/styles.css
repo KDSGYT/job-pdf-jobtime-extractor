@@ -44,6 +44,10 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 table { border-collapse: collapse; width: 100%; min-width: 980px; }
 th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 14px; }
 th { position: sticky; top: 0; background: #152238; color: #c9d7ef; z-index: 1; }
+th[data-sort] { cursor: pointer; user-select: none; }
+th[data-sort]::after { content: ' ↕'; color: var(--muted); font-size: 11px; }
+th.sorted-asc::after { content: ' ↑'; color: var(--accent); }
+th.sorted-desc::after { content: ' ↓'; color: var(--accent); }
 tbody tr:hover { background: rgba(255,255,255,.04); }
 .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; font-size: 12px; font-weight: 800; background: rgba(122,162,255,.16); color: #b9cbff; }
 .badge.split { background: rgba(85,214,190,.15); color: #a8fff0; }

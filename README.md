@@ -14,7 +14,7 @@ Streamlit web app for uploading crew/job description PDFs and extracting:
 ## Run locally
 
 ```bash
-cd /Users/alfred/job-pdf-jobtime-extractor
+cd job-pdf-jobtime-extractor
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/streamlit run streamlit_app.py --server.port 8020
@@ -50,5 +50,13 @@ https://share.streamlit.io/deploy?repository=KDSGYT%2Fjob-pdf-jobtime-extractor&
 ## Test parser with the sample PDF
 
 ```bash
-python3 tests/smoke_test.py
+.venv/bin/python tests/smoke_test.py
+```
+
+## Optional API/static web app
+
+The repository also includes a Starlette API app with a static HTML/JS frontend:
+
+```bash
+.venv/bin/uvicorn app:app --reload --port 8020
 ```
