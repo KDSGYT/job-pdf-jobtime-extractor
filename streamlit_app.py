@@ -9,6 +9,8 @@ import streamlit as st
 from parser import parse_pdf, rows_to_csv, rows_to_dicts
 from table_state import filter_rows, sort_rows
 
+FEATURE_REQUEST_URL = "https://github.com/KDSGYT/job-pdf-jobtime-extractor/issues/new?labels=enhancement&title=Feature%20request:%20"
+
 
 @st.cache_data(show_spinner=False)
 def extract_pdf(pdf_bytes: bytes) -> tuple[list, list[dict], str]:
@@ -40,6 +42,7 @@ st.markdown(
     '<div class="muted">Upload a crew/job description PDF and extract job numbers, PD time, STBY, and split start/end/duration.</div>',
     unsafe_allow_html=True,
 )
+st.link_button("💡 Suggest a feature", FEATURE_REQUEST_URL)
 st.divider()
 
 uploaded_file = st.file_uploader("Upload job description PDF", type=["pdf"])
