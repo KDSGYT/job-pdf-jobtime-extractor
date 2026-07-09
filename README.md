@@ -1,6 +1,6 @@
-# Job PDF PD/STBY/Split Extractor
+# DEXTR
 
-Streamlit web app for uploading crew/job description PDFs and extracting:
+Streamlit web app for uploading crew/job description PDFs and extracting clean duty-time records:
 
 - Job number
 - Valid days

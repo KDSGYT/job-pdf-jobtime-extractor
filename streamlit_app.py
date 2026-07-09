@@ -20,7 +20,7 @@ def extract_pdf(pdf_bytes: bytes) -> tuple[list, list[dict], str]:
 
 
 st.set_page_config(
-    page_title="Job PDF PD/STBY/Split Extractor",
+    page_title="DEXTR",
     page_icon="📄",
     layout="wide",
 )
@@ -37,9 +37,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="main-title">📄 Job PDF PD/STBY/Split Extractor</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">📄 DEXTR</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="muted">Upload a crew/job description PDF and extract job numbers, PD time, STBY, and split start/end/duration.</div>',
+    '<div class="muted">Duty EXtraction & Time Records. Upload a crew/job description PDF and extract job numbers, PD time, STBY, and split start/end/duration.</div>',
     unsafe_allow_html=True,
 )
 st.link_button("💡 Suggest a feature", FEATURE_REQUEST_URL)
