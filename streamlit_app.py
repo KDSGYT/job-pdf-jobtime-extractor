@@ -107,7 +107,6 @@ sort_by = sort_col_1.selectbox(
         "job_start",
         "job_end",
         "job_duration",
-        "on_duty_location",
         "job_number",
         "record_type",
     ],
@@ -136,9 +135,6 @@ st.dataframe(
         "job_start",
         "job_end",
         "job_duration",
-        "on_duty_location",
-        "page",
-        "raw_line",
     ],
     column_config={
         "job_number": "Job #",
@@ -152,9 +148,6 @@ st.dataframe(
         "job_start": "Job start",
         "job_end": "Job end",
         "job_duration": "Job duration",
-        "on_duty_location": "On duty",
-        "page": "PDF page",
-        "raw_line": "Raw line",
     },
 )
 
@@ -164,6 +157,6 @@ with st.expander("What the app extracts"):
         - **PD time**: rows labelled `PDTIME`, `PDTIM`, or `PD`.
         - **STBY**: rows labelled `STBY`.
         - **Split**: non-zero split time plus `Split from ... to ...` when present.
-        - Each row includes the parent **job number**, valid days, job start/end, page number, start/end, and duration.
+        - Each row includes the parent **job number**, valid days, job start/end, start/end, and duration.
         """
     )

@@ -97,8 +97,6 @@ function renderRows() {
       <td>${escapeHtml(row.from_location)}</td>
       <td>${escapeHtml(row.to_location)}</td>
       <td>${escapeHtml(row.job_start)} → ${escapeHtml(row.job_end)}</td>
-      <td>${escapeHtml(row.on_duty_location)}</td>
-      <td>${escapeHtml(row.page)}</td>
     </tr>
   `).join('');
   renderSortHeaders();
