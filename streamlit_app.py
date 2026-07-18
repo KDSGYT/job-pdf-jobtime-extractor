@@ -247,6 +247,7 @@ if st.session_state.get("processed"):
             preview_df,
             hide_index=True,
             use_container_width=True,
+            num_rows="fixed",
             disabled=[
                 "Employee name", "Target row", "Column", "Column heading", "Existing target value",
                 "Source file", "Source label", "Source row", "Status found", "Change ID",
