@@ -79,31 +79,30 @@ def test_newest_nonblank_source_value_wins_and_blanks_do_not_clear(tmp_path):
     assert update.proposed_values["F"].value == "new night note"
 
 
-def test_preview_matches_target_rows_and_only_columns_b_to_f(tmp_path):
+def test_preview_matches_target_rows_and_only_empty_columns_b_to_f(tmp_path):
     source = tmp_path / "source.xlsx"
     target = tmp_path / "target.xlsm"
-    make_workbook(source, [["Labelle, Paul QCTO", "DNC", None, None, None, None, "source predicted", "source formula"]])
-    make_workbook(target, [["Labelle, Paul CTO", "old", None, None, None, None, 44, "=60-G2"]])
+    make_workbook(source, [["Labelle, Paul QCTO", "DNC", "STB", "day note", "LD", "night note", "source predicted", "source formula"]])
+    make_workbook(target, [["Labelle, Paul CTO", "existing B", None, "existing D", None, None, 44, "=60-G2"]])
 
     updates = build_updates_from_sources([source], ["Source 1"])
     changes, unmatched = build_preview_changes(target, updates)
 
     assert unmatched == []
-    assert len(changes) == 1
-    change = changes[0]
-    assert change.employee_name == "Labelle, Paul"
-    assert change.target_row == 2
-    assert change.column_letter == "B"
-    assert change.existing_value == "old"
-    assert change.proposed_value == "DNC"
+    assert [(change.column_letter, change.proposed_value) for change in changes] == [
+        ("C", "STB"),
+        ("E", "LD"),
+        ("F", "night note"),
+    ]
+    assert all(change.target_row == 2 for change in changes)
 
 
-def test_apply_selected_changes_preserves_g_h_formulas_and_source_sheet(tmp_path):
+def test_apply_selected_changes_preserves_existing_target_data_g_h_formulas_and_source_sheet(tmp_path):
     source = tmp_path / "source.xlsx"
     target = tmp_path / "target.xlsm"
     output = tmp_path / "updated.xlsm"
-    make_workbook(source, [["Labelle, Paul QCTO", "DNC", None, None, None, None, "source predicted", "source formula"]])
-    make_workbook(target, [["Labelle, Paul CTO", "old", None, None, None, None, 44, "=60-G2"]])
+    make_workbook(source, [["Labelle, Paul QCTO", "DNC", "STB", "day note", None, None, "source predicted", "source formula"]])
+    make_workbook(target, [["Labelle, Paul CTO", "existing B", None, "existing D", None, None, 44, "=60-G2"]])
 
     updates = build_updates_from_sources([source], ["Source 1"])
     changes, _ = build_preview_changes(target, updates)
@@ -112,7 +111,9 @@ def test_apply_selected_changes_preserves_g_h_formulas_and_source_sheet(tmp_path
     wb = load_workbook(output, keep_vba=True, data_only=False)
     ws = wb[SHEET]
     assert ws["A2"].value == "Labelle, Paul CTO"
-    assert ws["B2"].value == "DNC"
+    assert ws["B2"].value == "existing B"
+    assert ws["C2"].value == "STB"
+    assert ws["D2"].value == "existing D"
     assert ws["G2"].value == 44
     assert ws["H2"].value == "=60-G2"
     assert wb["Source"]["A1"].value == "do not touch"

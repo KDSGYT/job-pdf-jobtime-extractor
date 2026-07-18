@@ -341,6 +341,8 @@ def build_preview_changes(
                 continue
             source_value = update.proposed_values[column_letter]
             existing = ws.cell(row=target_row, column=TRANSFER_COLUMN_NUMBERS[column_letter]).value
+            if cell_text(existing):
+                continue
             proposed = source_value.value
             changes.append(
                 PreviewChange(

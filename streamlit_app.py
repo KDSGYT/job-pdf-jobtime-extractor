@@ -124,13 +124,13 @@ def reset_results():
 
 
 st.title("DEXTR — Crew Not On Duty Workbook Updater")
-st.caption("Upload seven source workbooks and one target .xlsm workbook. DEXTR previews DNC/STB/WSIB/LD updates before creating a safe edited copy.")
+st.caption("Upload seven source workbooks and one target .xlsm workbook. DEXTR fills empty DNC/STB/WSIB/LD cells in a safe edited copy.")
 
 st.markdown(
     """
 <div class="warning-box">
 <strong>Safety rules built in:</strong> DEXTR reads only <code>Crew Not On Duty Report</code>, ignores <code>Source</code>,
-updates only columns <strong>B through F</strong>, and never overwrites columns <strong>A, G, or H</strong>.
+fills only empty cells in columns <strong>B through F</strong>, and never overwrites existing target data or columns <strong>A, G, or H</strong>.
 The original target file is never overwritten.
 </div>
 """,
@@ -139,11 +139,8 @@ The original target file is never overwritten.
 
 with st.sidebar:
     st.header("Settings")
-    allow_blank_clear = st.checkbox(
-        "Allow blank source cells to clear target cells",
-        value=False,
-        help="Disabled by default. Leave off unless you intentionally want newer blanks to clear older/target information.",
-    )
+    allow_blank_clear = False
+    st.caption("DEXTR only fills empty target cells. Existing target data is never cleared or replaced.")
     st.markdown("Statuses searched case-insensitively:")
     st.code(", ".join(STATUS_CODES))
     st.markdown("Columns copied exactly in-place:")
@@ -239,7 +236,7 @@ if st.session_state.get("processed"):
     st.subheader("3. Preview changes before update")
     if changes:
         st.markdown(
-            f"<div class='good-box'><strong>{len(changes)}</strong> proposed cell update(s) found. Review, edit proposed values if needed, and deselect anything you do not want applied.</div>",
+            f"<div class='good-box'><strong>{len(changes)}</strong> empty target cell(s) can be filled. Review, edit proposed values if needed, and deselect anything you do not want applied.</div>",
             unsafe_allow_html=True,
         )
         preview_df = changes_to_dataframe(changes)
@@ -324,9 +321,9 @@ with st.expander("Exact workbook rules implemented"):
 - Ignores worksheet: `Source`
 - Scans source columns B through F only for DNC, STB, WSIB, LD
 - Copies source B→target B, C→C, D→D, E→E, F→F
-- Never copies or overwrites A, G, or H
+- Never copies or overwrites A, G, H, or populated target cells
 - Preserves target workbook formatting by editing a copied workbook with OpenPyXL and `keep_vba=True`
 - Does not add, delete, or reorder employee rows
-- Blank source cells do not clear target cells unless the sidebar setting is enabled
+- Blank source cells never clear target cells
 """
     )
