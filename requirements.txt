@@ -1,5 +1,4 @@
-streamlit
-pypdf
-starlette
-python-multipart
-uvicorn
+streamlit>=1.30
+openpyxl>=3.1
+pandas>=2.0
+pytest>=8.0
